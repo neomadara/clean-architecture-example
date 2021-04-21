@@ -7,7 +7,11 @@ import (
 
 type todoPresenter struct{}
 
-func (tp todoPresenter) ResponseTodo(r []*model.Todo) []*model.Todo {
+func (tp todoPresenter) ResponseTodo(r *model.Todo) *model.Todo {
+	return r
+}
+
+func (tp todoPresenter) ResponseTodos(r []*model.Todo) []*model.Todo {
 	return r
 }
 

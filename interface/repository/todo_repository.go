@@ -5,12 +5,31 @@ import (
 	"github.com/neomadara/clean-architecture-example/domain/model"
 	"github.com/neomadara/clean-architecture-example/usecase/repository"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"log"
 )
 
 type todoRepository struct {
 	mongoClient *mongo.Client
+}
+
+func (db todoRepository) FindTodoById(id primitive.ObjectID) (*model.Todo, error) {
+	var ctx = context.TODO()
+	var todo *model.Todo
+
+	filter := bson.D{{"_id", id}}
+	database := db.mongoClient.Database("todosapp")
+	collection := database.Collection("todos")
+
+	result := collection.FindOne(ctx, filter)
+
+	err := result.Decode(&todo)
+	if err != nil {
+		log.Printf("Failed marshalling %v", err)
+		return nil, err
+	}
+	return todo, nil
 }
 
 func (db todoRepository) GetAllTodos() ([]*model.Todo, error) {
