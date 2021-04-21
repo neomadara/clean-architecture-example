@@ -7,5 +7,6 @@ import (
 
 func NewRouter(app *fiber.App, c controller.AppController) *fiber.App {
 	app.Get("/todos", func(ctx *fiber.Ctx) error { return c.Todo.GetAllTodos(ctx) })
+	app.Get("/todos/:id", func(ctx *fiber.Ctx) error { return c.Todo.FindTodoById(ctx) })
 	return app
 }
