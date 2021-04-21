@@ -1,8 +1,11 @@
 package repository
 
-import "github.com/neomadara/clean-architecture-example/domain/model"
+import (
+	"github.com/neomadara/clean-architecture-example/domain/model"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+)
 
 type TodoRepository interface {
 	GetAllTodos() ([]*model.Todo, error)
-	FindTodoById(id string) (*model.Todo, error)
+	FindTodoById(id primitive.ObjectID) (*model.Todo, error)
 }
