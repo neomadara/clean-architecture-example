@@ -14,6 +14,16 @@ type todoRepository struct {
 	mongoClient *mongo.Client
 }
 
+func (db todoRepository) CreateTodo(todo *model.Todo) error {
+	var ctx = context.TODO()
+
+	_, err := db.mongoClient.Database("todosapp").Collection("todos").InsertOne(ctx, todo)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func (db todoRepository) FindTodoById(id primitive.ObjectID) (*model.Todo, error) {
 	var ctx = context.TODO()
 	var todo *model.Todo

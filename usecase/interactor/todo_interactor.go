@@ -13,6 +13,10 @@ type todoInteractor struct {
 	DBRepository   repository.DBRepository
 }
 
+func (us *todoInteractor) CreateTodo(todo *model.Todo) error {
+	return us.TodoRepository.CreateTodo(todo)
+}
+
 func (us *todoInteractor) FindTodoById(id primitive.ObjectID) (*model.Todo, error) {
 	todo, err := us.TodoRepository.FindTodoById(id)
 	if err != nil {
@@ -32,6 +36,7 @@ func (us *todoInteractor) GetAllTodos() ([]*model.Todo, error) {
 type TodoInteractor interface {
 	GetAllTodos() ([]*model.Todo, error)
 	FindTodoById(id primitive.ObjectID) (*model.Todo, error)
+	CreateTodo(*model.Todo) error
 }
 
 func NewTodoInteractor(r repository.TodoRepository, p presenter.TodoPresenter, d repository.DBRepository) TodoInteractor {

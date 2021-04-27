@@ -8,4 +8,5 @@ import (
 type TodoRepository interface {
 	GetAllTodos() ([]*model.Todo, error)
 	FindTodoById(id primitive.ObjectID) (*model.Todo, error)
+	CreateTodo(*model.Todo) error
 }

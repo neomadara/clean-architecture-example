@@ -2,12 +2,31 @@ package controller
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/neomadara/clean-architecture-example/domain/model"
 	"github.com/neomadara/clean-architecture-example/usecase/interactor"
+	log "github.com/sirupsen/logrus"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type todoController struct {
 	todoInteractor interactor.TodoInteractor
+}
+
+func (tc todoController) CreateTodo(c *fiber.Ctx) error {
+	todoModel := new(model.Todo)
+
+	if err := c.BodyParser(todoModel); err != nil {
+		return err
+	}
+
+	errUseCase := tc.todoInteractor.CreateTodo(todoModel)
+
+	if errUseCase != nil {
+		log.Println("error creating todo %v", errUseCase)
+		return c.Status(500).JSON(errUseCase)
+	}
+
+	return c.Status(200).JSON(fiber.Map{"message": "todo created successfully"})
 }
 
 func (tc todoController) FindTodoById(c *fiber.Ctx) error {
@@ -39,6 +58,7 @@ func (tc todoController) GetAllTodos(c *fiber.Ctx) error {
 type TodoController interface {
 	GetAllTodos(c *fiber.Ctx) error
 	FindTodoById(c *fiber.Ctx) error
+	CreateTodo(c *fiber.Ctx) error
 }
 
 func NewTodoController(ti interactor.TodoInteractor) TodoController {
