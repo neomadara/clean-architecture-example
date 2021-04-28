@@ -28,9 +28,10 @@ func (db todoRepository) FindTodoById(id primitive.ObjectID) (*model.Todo, error
 	var ctx = context.TODO()
 	var todo *model.Todo
 
-	filter := bson.D{{"_id", id}}
 	database := db.mongoClient.Database("todosapp")
 	collection := database.Collection("todos")
+
+	filter := bson.D{{"_id", id}}
 
 	result := collection.FindOne(ctx, filter)
 
