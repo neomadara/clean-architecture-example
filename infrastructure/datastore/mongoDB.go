@@ -51,5 +51,7 @@ func MongoClient() *mongo.Database {
 
 	log.Printf("Connected to MongoDB!")
 
-	return client.Database("todosapp")
+	database := goDotEnvVariable("DATABASE")
+
+	return client.Database(database)
 }
