@@ -11,13 +11,13 @@ import (
 )
 
 type todoRepository struct {
-	mongoClient *mongo.Client
+	mongoDB *mongo.Database
 }
 
 func (db todoRepository) CreateTodo(todo *model.Todo) error {
 	var ctx = context.TODO()
 
-	_, err := db.mongoClient.Database("todosapp").Collection("todos").InsertOne(ctx, todo)
+	_, err := db.mongoDB.Collection("todos").InsertOne(ctx, todo)
 	if err != nil {
 		return err
 	}
@@ -28,8 +28,7 @@ func (db todoRepository) FindTodoById(id primitive.ObjectID) (*model.Todo, error
 	var ctx = context.TODO()
 	var todo *model.Todo
 
-	database := db.mongoClient.Database("todosapp")
-	collection := database.Collection("todos")
+	collection := db.mongoDB.Collection("todos")
 
 	filter := bson.D{{"_id", id}}
 
@@ -47,8 +46,7 @@ func (db todoRepository) GetAllTodos() ([]*model.Todo, error) {
 	var ctx = context.TODO()
 	var todos []*model.Todo
 
-	database := db.mongoClient.Database("todosapp")
-	collection := database.Collection("todos")
+	collection := db.mongoDB.Collection("todos")
 
 	filter := bson.D{}
 	result, errDB := collection.Find(ctx, filter)
@@ -70,6 +68,6 @@ func (db todoRepository) GetAllTodos() ([]*model.Todo, error) {
 
 }
 
-func NewTodoRepository(mongoClient *mongo.Client) repository.TodoRepository {
-	return &todoRepository{mongoClient}
+func NewTodoRepository(mongoDB *mongo.Database) repository.TodoRepository {
+	return &todoRepository{mongoDB}
 }

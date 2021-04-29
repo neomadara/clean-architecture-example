@@ -15,11 +15,11 @@ func (r *registry) NewTodoController() controller.TodoController {
 }
 
 func (r *registry) NewTodoInteractor() interactor.TodoInteractor {
-	return interactor.NewTodoInteractor(r.NewTodoRepository(), r.NewTodoPresenter(), ir.NewDBRepository(r.mongoClient))
+	return interactor.NewTodoInteractor(r.NewTodoRepository(), r.NewTodoPresenter(), ir.NewDBRepository(r.mongoDB))
 }
 
 func (r *registry) NewTodoRepository() tr.TodoRepository {
-	return ir.NewTodoRepository(r.mongoClient)
+	return ir.NewTodoRepository(r.mongoDB)
 }
 
 func (r *registry) NewTodoPresenter() tp.TodoPresenter {

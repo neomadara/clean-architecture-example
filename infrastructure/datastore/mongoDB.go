@@ -28,7 +28,7 @@ func goDotEnvVariable(key string) string {
 }
 
 // MongoClient GetConnection Retrieves a client to the MongoDB
-func MongoClient() *mongo.Client {
+func MongoClient() *mongo.Database {
 	connectionURI := goDotEnvVariable("MONGO_URI")
 
 	client, err := mongo.NewClient(options.Client().ApplyURI(connectionURI))
@@ -51,5 +51,5 @@ func MongoClient() *mongo.Client {
 
 	log.Printf("Connected to MongoDB!")
 
-	return client
+	return client.Database("todosapp")
 }

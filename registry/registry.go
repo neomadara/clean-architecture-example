@@ -6,7 +6,7 @@ import (
 )
 
 type registry struct {
-	mongoClient *mongo.Client
+	mongoDB *mongo.Database
 }
 
 type Registry interface {
@@ -19,6 +19,6 @@ func (r *registry) NewAppController() controller.AppController {
 	}
 }
 
-func NewRegistry(mongoClient *mongo.Client) Registry {
-	return &registry{mongoClient}
+func NewRegistry(mongoDB *mongo.Database) Registry {
+	return &registry{mongoDB}
 }

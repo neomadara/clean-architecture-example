@@ -6,13 +6,13 @@ import (
 )
 
 type dbRepository struct {
-	mongoClient *mongo.Client
+	mongoDB *mongo.Database
 }
 
 func (d dbRepository) Transaction(f func(interface{}) (interface{}, error)) (interface{}, error) {
 	panic("implement me")
 }
 
-func NewDBRepository(mongoClient *mongo.Client) repository.DBRepository {
-	return &dbRepository{mongoClient}
+func NewDBRepository(mongoDB *mongo.Database) repository.DBRepository {
+	return &dbRepository{mongoDB}
 }
