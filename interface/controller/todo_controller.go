@@ -12,6 +12,26 @@ type todoController struct {
 	todoInteractor interactor.TodoInteractor
 }
 
+func (tc todoController) UpdateTodo(c *fiber.Ctx) error {
+	id := c.Params("id")
+
+	todoModel := new(model.Todo)
+	if errBodyParser := c.BodyParser(todoModel); errBodyParser != nil {
+		return c.Status(500).JSON(errBodyParser)
+	}
+
+	objID, errString := primitive.ObjectIDFromHex(id)
+	if errString != nil {
+		return c.Status(500).JSON(errString)
+	}
+
+	todo, errInteractor := tc.todoInteractor.UpdateTodo(objID, todoModel)
+	if errInteractor != nil {
+		return c.Status(500).JSON(errInteractor)
+	}
+	return c.Status(200).JSON(todo)
+}
+
 func (tc todoController) CreateTodo(c *fiber.Ctx) error {
 	todoModel := new(model.Todo)
 
@@ -59,6 +79,7 @@ type TodoController interface {
 	GetAllTodos(c *fiber.Ctx) error
 	FindTodoById(c *fiber.Ctx) error
 	CreateTodo(c *fiber.Ctx) error
+	UpdateTodo(c *fiber.Ctx) error
 }
 
 func NewTodoController(ti interactor.TodoInteractor) TodoController {

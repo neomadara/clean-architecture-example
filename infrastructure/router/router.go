@@ -9,5 +9,6 @@ func NewRouter(app *fiber.App, c controller.AppController) *fiber.App {
 	app.Get("/todos", func(ctx *fiber.Ctx) error { return c.Todo.GetAllTodos(ctx) })
 	app.Get("/todos/:id", func(ctx *fiber.Ctx) error { return c.Todo.FindTodoById(ctx) })
 	app.Post("/todos", func(ctx *fiber.Ctx) error { return c.Todo.CreateTodo(ctx) })
+	app.Put("/todos/:id", func(ctx *fiber.Ctx) error { return c.Todo.UpdateTodo(ctx) })
 	return app
 }

@@ -7,11 +7,36 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
 )
 
 type todoRepository struct {
 	mongoDB *mongo.Database
+}
+
+func (db todoRepository) UpdateTodo(id primitive.ObjectID, todo *model.Todo) (*model.Todo, error) {
+	var updateTodo *model.Todo
+	var ctx = context.TODO()
+
+	update := bson.M{
+		"$set": todo,
+	}
+
+	upsert := true
+	after := options.After
+	opt := options.FindOneAndUpdateOptions{
+		Upsert:         &upsert,
+		ReturnDocument: &after,
+	}
+
+	err := db.mongoDB.Collection("todos").FindOneAndUpdate(ctx, bson.M{"_id": id}, update, &opt).Decode(&updateTodo)
+	if err != nil {
+		log.Printf("Could not update Todo: %v", err)
+		return nil, err
+	}
+
+	return updateTodo, nil
 }
 
 func (db todoRepository) CreateTodo(todo *model.Todo) error {
