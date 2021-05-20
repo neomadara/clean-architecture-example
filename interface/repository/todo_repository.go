@@ -15,6 +15,16 @@ type todoRepository struct {
 	mongoDB *mongo.Database
 }
 
+func (db todoRepository) DeleteTodo(id primitive.ObjectID) error {
+	var ctx = context.TODO()
+	_, err := db.mongoDB.Collection("todos").DeleteOne(ctx, bson.M{"_id": id})
+
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func (db todoRepository) UpdateTodo(id primitive.ObjectID, todo *model.Todo) (*model.Todo, error) {
 	var updateTodo *model.Todo
 	var ctx = context.TODO()
