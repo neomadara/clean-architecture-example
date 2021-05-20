@@ -10,4 +10,5 @@ type TodoRepository interface {
 	FindTodoById(id primitive.ObjectID) (*model.Todo, error)
 	CreateTodo(*model.Todo) error
 	UpdateTodo(id primitive.ObjectID, todo *model.Todo) (*model.Todo, error)
+	DeleteTodo(id primitive.ObjectID) error
 }
