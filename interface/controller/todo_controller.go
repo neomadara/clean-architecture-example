@@ -12,6 +12,24 @@ type todoController struct {
 	todoInteractor interactor.TodoInteractor
 }
 
+func (tc todoController) DeleteTodo(c *fiber.Ctx) error {
+	id := c.Params("id")
+	objectId, errObjectIdFromHex := primitive.ObjectIDFromHex(id)
+
+	if errObjectIdFromHex != nil {
+		return c.Status(404).JSON(errObjectIdFromHex)
+	}
+
+	errUseCase := tc.todoInteractor.DeleteTodo(objectId)
+
+	if errUseCase != nil {
+		log.Println("error deleting todo %v", errUseCase)
+		return c.Status(500).JSON(errUseCase)
+	}
+
+	return c.Status(200).JSON(fiber.Map{"message": "todo deleted successfully"})
+}
+
 func (tc todoController) UpdateTodo(c *fiber.Ctx) error {
 	id := c.Params("id")
 
@@ -80,6 +98,7 @@ type TodoController interface {
 	FindTodoById(c *fiber.Ctx) error
 	CreateTodo(c *fiber.Ctx) error
 	UpdateTodo(c *fiber.Ctx) error
+	DeleteTodo(c *fiber.Ctx) error
 }
 
 func NewTodoController(ti interactor.TodoInteractor) TodoController {
